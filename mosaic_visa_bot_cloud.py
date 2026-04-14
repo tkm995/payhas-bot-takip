@@ -82,9 +82,6 @@ def send_email(office_name, new_slots, now_str, office_id):
                           border-radius: 6px; font-weight: bold;">
                     Randevu Al
                 </a>
-                <p style="margin-top: 20px; color: #999; font-size: 12px;">
-                    Bu bildirim Mosaic Visa Takip Botu tarafindan gonderilmistir.
-                </p>
             </div>
         </body>
         </html>
@@ -96,11 +93,14 @@ def send_email(office_name, new_slots, now_str, office_id):
         msg["To"]      = ", ".join(EMAIL_RECEIVERS)
         msg.attach(MIMEText(html_body, "html"))
 
-        with smtplib.SMTP_SSL("smtp.gmail.com", 465) as server:
+        with smtplib.SMTP("smtp.gmail.com", 587) as server:
+            server.ehlo()
+            server.starttls()
+            server.ehlo()
             server.login(EMAIL_SENDER, EMAIL_PASSWORD)
             server.sendmail(EMAIL_SENDER, EMAIL_RECEIVERS, msg.as_string())
 
-        log.info("E-posta bildirimi gonderildi.")
+        log.info("E-posta gonderildi.")
 
     except Exception as e:
         log.error("E-posta gonderilemedi: " + str(e))
@@ -124,19 +124,39 @@ def get_available_slots(office_id, month=None):
 
     soup = BeautifulSoup(r.text, "html.parser")
     available = []
+    today = date.today()
 
-    months_en = ["January","February","March","April","May","June",
-                 "July","August","September","October","November","December"]
+    months_en = {
+        "January": 1, "February": 2, "March": 3, "April": 4,
+        "May": 5, "June": 6, "July": 7, "August": 8,
+        "September": 9, "October": 10, "November": 11, "December": 12
+    }
 
     for cell in soup.find_all(["td", "tr", "div", "li", "a"]):
         text = cell.get_text(separator=" ", strip=True)
-        has_date = any(m in text for m in months_en) and "2026" in text
-        has_reserved = "Reserved" in text
 
-        if has_date and not has_reserved and len(text) < 60:
-            date_str = text.strip()
-            if date_str and date_str not in available:
-                available.append(date_str)
+        if "Available" not in text:
+            continue
+        if "Reserved" in text:
+            continue
+        if "2026" not in text:
+            continue
+        if len(text) > 60:
+            continue
+
+        try:
+            for month_name, month_num in months_en.items():
+                if month_name in text:
+                    parts = text.split()
+                    day = int(parts[0])
+                    slot_date = date(2026, month_num, day)
+                    if slot_date < today:
+                        break
+                    if text not in available:
+                        available.append(text)
+                    break
+        except:
+            pass
 
     return available
 
@@ -154,11 +174,10 @@ def get_months():
 
 def main():
     log.info("Mosaic Visa Bot Baslatildi")
-    log.info("Ofisler: " + str([OFFICE_NAMES.get(i) for i in OFFICE_IDS]))
 
     send_telegram(
         "Mosaic Visa Bot Baslatildi\n"
-        + ", ".join(OFFICE_NAMES.get(i,"") for i in OFFICE_IDS) + "\n"
+        + ", ".join(OFFICE_NAMES.get(i, "") for i in OFFICE_IDS) + "\n"
         + "Her " + str(CHECK_INTERVAL_MINUTES) + " dakikada kontrol ediyorum..."
     )
 
