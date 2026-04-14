@@ -20,7 +20,7 @@ EMAIL_RECEIVERS = ["nagmatberdiyev@gmail.com", "payhasacademy@gmail.com"]
 
 OFFICE_IDS = [11, 12]
 CHECK_INTERVAL_MINUTES = 5
-MONTHS_AHEAD = 2
+MONTHS_AHEAD = 1
 
 OFFICE_NAMES = {
     11: "Ashgabat (Normal)",
