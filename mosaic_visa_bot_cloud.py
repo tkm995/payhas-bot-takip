@@ -90,7 +90,7 @@ def send_email(office_name, new_slots, now_str, office_id):
                 "Content-Type": "application/json"
             },
             json={
-                "from": "Mosaic Bot <onboarding@resend.dev>",
+                "from": "Mosaic Bot <nagmatberdiyev@gmail.com>",
                 "to": EMAIL_RECEIVERS,
                 "subject": "Yeni Randevu Slotu - " + office_name,
                 "html": html_body
