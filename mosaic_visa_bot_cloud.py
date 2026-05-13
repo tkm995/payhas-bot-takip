@@ -9,7 +9,7 @@ import logging
 from datetime import datetime, date
 
 TELEGRAM_BOT_TOKEN = "8104833501:AAHex2xOfDFhdW-kEH909FOquwVZvza9Qa0"
-TELEGRAM_CHAT_IDS  = ["8011613197", "894826660", "5458502467"]
+TELEGRAM_CHAT_IDS  = ["5458502467"]
 
 RESEND_API_KEY  = os.environ.get("RESEND_API_KEY", "")
 EMAIL_RECEIVERS = ["dbtkm995@gmail.com"]
