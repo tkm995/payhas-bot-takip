@@ -8,11 +8,11 @@ import requests
 import logging
 from datetime import datetime, date
 
-TELEGRAM_BOT_TOKEN = "8681089221:AAEJISrx7ppZOchHjtOiFoSGg0mMIr20iao"
-TELEGRAM_CHAT_IDS  = ["8011613197", "894826660"]
+TELEGRAM_BOT_TOKEN = "8104833501:AAHex2xOfDFhdW-kEH909FOquwVZvza9Qa0"
+TELEGRAM_CHAT_IDS  = ["8011613197", "894826660", "5458502467"]
 
 RESEND_API_KEY  = os.environ.get("RESEND_API_KEY", "")
-EMAIL_RECEIVERS = ["nagmatberdiyev@gmail.com"]
+EMAIL_RECEIVERS = ["dbtkm995@gmail.com"]
 
 OFFICE_IDS = [11, 12]
 CHECK_INTERVAL_MINUTES = 5
